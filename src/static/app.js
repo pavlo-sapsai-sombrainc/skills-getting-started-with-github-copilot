@@ -50,9 +50,21 @@ document.addEventListener("DOMContentLoaded", () => {
         const spotsLeft = details.max_participants - details.participants.length;
         
         // Create participants list HTML with delete buttons
-        const participantsList = details.participants.length > 0
-          ? `<ul>${details.participants.map(p => `<li><span class="participant-email">${p}</span><button class="delete-btn" data-activity="${name}" data-email="${p}" title="Remove participant">×</button></li>`).join('')}</ul>`
-          : `<p><em>No participants yet</em></p>`;
+        const escapeHtml = (value) =>
+          String(value).replace(/[&<>"']/g, (ch) =>
+            ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch])
+          );
+
+        const safeActivityName = escapeHtml(name);
+        const participantsList =
+          details.participants.length > 0
+            ? `<ul>${details.participants
+                .map((p) => {
+                  const safeEmail = escapeHtml(p);
+                  return `<li><span class="participant-email">${safeEmail}</span><button class="delete-btn" data-activity="${safeActivityName}" data-email="${safeEmail}" title="Remove participant" type="button">×</button></li>`;
+                })
+                .join("")}</ul>`
+            : `<p><em>No participants yet</em></p>`;
 
         activityCard.innerHTML = `
           <h4>${name}</h4>
