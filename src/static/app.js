@@ -9,10 +9,9 @@ document.addEventListener("DOMContentLoaded", () => {
     event.preventDefault();
     event.stopPropagation();
 
-    const btn = event.target;
+    const btn = event.currentTarget;
     const activityName = btn.dataset.activity;
     const email = btn.dataset.email;
-
     try {
       const response = await fetch(
         `/activities/${encodeURIComponent(activityName)}/unregister?email=${encodeURIComponent(email)}`,
